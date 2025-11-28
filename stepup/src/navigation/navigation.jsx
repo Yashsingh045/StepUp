@@ -1,8 +1,8 @@
 import React from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
 
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -12,17 +12,18 @@ import Dashboard from "../screens/dashboard";
 import Workouts from "../screens/workouts";
 import Profile from "../screens/profile";
 import AddWorkout from "../screens/addworkout";
+import Progress from "../screens/progress";
 
-const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-// Floating middle "+" button
+// Floating Add Button Component
 const AddButton = ({ children, onPress }) => {
   return (
     <TouchableOpacity
       style={styles.floatingButton}
       onPress={onPress}
-      activeOpacity={0.9}
+      activeOpacity={0.8}
     >
       <View style={styles.buttonInner}>{children}</View>
     </TouchableOpacity>
@@ -47,7 +48,7 @@ function BottomTabs({ navigation }) {
         name="Dashboard"
         component={Dashboard}
         options={{
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="view-dashboard-outline"
               size={30}
@@ -62,13 +63,17 @@ function BottomTabs({ navigation }) {
         name="Workouts"
         component={Workouts}
         options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="chart-line" size={30} color={color} />
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="chart-line"
+              size={30}
+              color={color}
+            />
           ),
         }}
       />
 
-      {/* Floating Center + Button */}
+      {/* Middle + Button */}
       <Tab.Screen
         name="AddWorkout"
         component={AddWorkout}
@@ -76,9 +81,23 @@ function BottomTabs({ navigation }) {
           tabBarLabel: "",
           tabBarIcon: () => null,
           tabBarButton: (props) => (
-            <AddButton {...props} onPress={() => navigation.navigate("AddWorkout")}>
-              <Ionicons name="add" size={35} color="#fff" />
+            <AddButton
+              {...props}
+              onPress={() => navigation.navigate("AddWorkout")}
+            >
+              <Ionicons name="add" size={36} color="#fff" />
             </AddButton>
+          ),
+        }}
+      />
+
+      {/* Progress */}
+      <Tab.Screen
+        name="Progress"
+        component={Progress}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="chart-bar" size={30} color={color} />
           ),
         }}
       />
@@ -101,9 +120,7 @@ export default function AppNavigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* Login First */}
         <Stack.Screen name="Login" component={Login} />
-        {/* Main App */}
         <Stack.Screen name="Home" component={BottomTabs} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -123,6 +140,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#4C9FFF",
     justifyContent: "center",
     alignItems: "center",
-    elevation: 8,
+    elevation: 5,
   },
 });
