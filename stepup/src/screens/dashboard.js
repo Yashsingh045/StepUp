@@ -20,7 +20,7 @@ const Dashboard = () => {
                 <WeeklyGoals />
                 <RecentWorkouts />
             </ScrollView>
-            <BottomNav />
+            {/* <BottomNav /> */}
         </View>
     );
 };
