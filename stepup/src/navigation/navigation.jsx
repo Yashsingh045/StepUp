@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-
+import Landing from "../screens/Landing";
 // Screens
 import Login from "../screens/login";
 import Dashboard from "../screens/dashboard";
@@ -43,7 +43,6 @@ function BottomTabs({ navigation }) {
         tabBarActiveTintColor: "#4C9FFF",
       }}
     >
-      {/* Dashboard */}
       <Tab.Screen
         name="Dashboard"
         component={Dashboard}
@@ -57,8 +56,6 @@ function BottomTabs({ navigation }) {
           ),
         }}
       />
-
-      {/* Workouts */}
       <Tab.Screen
         name="Workouts"
         component={Workouts}
@@ -119,7 +116,11 @@ function BottomTabs({ navigation }) {
 export default function AppNavigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        initialRouteName="Landing"
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen name="Landing" component={Landing} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={BottomTabs} />
         <Stack.Screen name="AddWorkout" component={AddWorkout} options={{ presentation: 'modal' }} />
