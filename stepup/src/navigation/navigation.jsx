@@ -72,8 +72,8 @@ function BottomTabs({ navigation }) {
 
       {/* Middle + Button */}
       <Tab.Screen
-        name="AddWorkout"
-        component={AddWorkout}
+        name="Add"
+        component={() => null}
         options={{
           tabBarLabel: "",
           tabBarIcon: () => null,
@@ -123,6 +123,7 @@ export default function AppNavigation() {
         <Stack.Screen name="Landing" component={Landing} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={BottomTabs} />
+        <Stack.Screen name="AddWorkout" component={AddWorkout} options={{ presentation: 'modal' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

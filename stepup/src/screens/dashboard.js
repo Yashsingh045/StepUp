@@ -4,7 +4,6 @@ import { COLORS } from '../constants/theme';
 import Header from '../components/dashboard/Header';
 import TodayCard from '../components/dashboard/TodayCard';
 import RecentWorkouts from '../components/dashboard/RecentWorkouts';
-import BottomNav from '../components/dashboard/BottomNav';
 import WeeklyGoals from '../components/dashboard/WeeklyGoals';
 
 const Dashboard = () => {
@@ -20,7 +19,7 @@ const Dashboard = () => {
                 <WeeklyGoals />
                 <RecentWorkouts />
             </ScrollView>
-            {/* <BottomNav /> */}
+
         </View>
     );
 };
