@@ -1,10 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {View,Text,Image,StyleSheet,TouchableOpacity,ScrollView,Modal,
-  Switch,TextInput,Alert} from "react-native";
+Switch,TextInput,Alert} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {AntDesign,Feather,MaterialIcons} from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { getUser } from "../utils/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage"; 
+import { getUser } from "../utils/storage"; 
+
+const THEME_KEY = '@theme_preference';
+const getThemePreference = async () => {
+    try {
+        const value = await AsyncStorage.getItem(THEME_KEY);
+        return value === 'true'; 
+    } catch (e) {
+        console.error("Failed to load theme preference", e);
+        return false;
+    }
+};
+
+const saveThemePreference = async (isDark) => {
+    try {
+        await AsyncStorage.setItem(THEME_KEY, String(isDark));
+    } catch (e) {
+        console.error("Failed to save theme preference", e);
+    }
+};
 
 const COLORS = {primary: "#6C63FF",lightBackground: "#fff",
   darkBackground: "#121212",lightCard: "#F7F7F8",darkCard: "#1E1E1E",lightText: "#000",
@@ -25,7 +45,7 @@ export default function ProfileScreen() {
     age: "32",height: "170",weight: "75"});
   useFocusEffect(
     React.useCallback(() => {
-      const loadUser = async () => {
+      const loadSettings = async () => {
         const user = await getUser();
         if (user) {
           setPerson(prev => ({
@@ -34,10 +54,15 @@ export default function ProfileScreen() {
             email: user.email || prev.email,
           }));
         }
+        const isDark = await getThemePreference();
+        setDarkMode(isDark);
       };
-      loadUser();
+      loadSettings();
     }, [])
   );
+  useEffect(() => {
+    setEditFields(person);
+  }, [person]);
 
   const [editFields, setEditFields] = useState(person);
 
@@ -92,6 +117,10 @@ export default function ProfileScreen() {
       "Account Deleted",
       "Your account has been permanently deleted and cannot be recovered."
     );
+  };
+  const toggleDarkMode = (value) => {
+    setDarkMode(value);
+    saveThemePreference(value);
   };
 
   const SectionCard = ({ title, items }) => (
@@ -211,7 +240,6 @@ export default function ProfileScreen() {
           </>
         );
 
-      // FITNESS -----------------------------------------
       case "fitness":
         const percent = Math.min(
           100,
@@ -222,7 +250,6 @@ export default function ProfileScreen() {
         return (
           <>
             <Text style={[styles.modalTitle, { color: currentColors.text }]}>Workout Progress</Text>
-
             <Text style={[styles.progressLabel, { color: currentColors.text }]}>Total Workouts</Text>
             <Text style={[styles.progressValue, { color: currentColors.text }]}>{fitness.totalWorkouts}</Text>
 
@@ -299,7 +326,7 @@ export default function ProfileScreen() {
               <Text style={[styles.optionLabel, { color: currentColors.text }]}>Dark Mode</Text>
               <Switch
                 value={darkMode}
-                onValueChange={setDarkMode}
+                onValueChange={toggleDarkMode}
                 trackColor={{ false: currentColors.subText, true: COLORS.primary }}
                 thumbColor={COLORS.lightBackground}
               />
