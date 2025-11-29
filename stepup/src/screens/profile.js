@@ -1,46 +1,17 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Modal,
-  Switch,
-  TextInput,
-  Alert,
-} from "react-native";
+import {View,Text,Image,StyleSheet,TouchableOpacity,ScrollView,Modal,
+  Switch,TextInput,Alert} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  AntDesign,
-  Feather,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import {AntDesign,Feather,MaterialIcons} from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { getUser } from "../utils/storage";
 
-// Define a color palette for both light and dark themes
-const COLORS = {
-  primary: "#6C63FF",
-  lightBackground: "#fff",
-  darkBackground: "#121212",
-  lightCard: "#F7F7F8",
-  darkCard: "#1E1E1E",
-  lightText: "#000",
-  darkText: "#FFFFFFE6", // 90% white for primary text
-  lightSubText: "#666",
-  darkSubText: "#AAAAAA", // Lighter grey for subtext in dark mode
-  lightBorder: "#ddd",
-  darkBorder: "#333333",
-  lightInputBorder: "#e5e5e5",
-  darkInputBorder: "#444444",
-  lightRowBorder: "#e8e8e8",
-  darkRowBorder: "#333333",
-  lightProgressBar: "#e5e5e5",
-  darkProgressBar: "#333333",
-  danger: "red",
-};
+const COLORS = {primary: "#6C63FF",lightBackground: "#fff",
+  darkBackground: "#121212",lightCard: "#F7F7F8",darkCard: "#1E1E1E",lightText: "#000",
+  darkText: "#FFFFFFE6", lightSubText: "#666",darkSubText: "#AAAAAA", lightBorder: "#ddd",
+  darkBorder: "#333333",lightInputBorder: "#e5e5e5",darkInputBorder: "#444444",
+  lightRowBorder: "#e8e8e8",darkRowBorder: "#333333",lightProgressBar: "#e5e5e5",
+  darkProgressBar: "#333333",danger: "red"};
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
@@ -48,16 +19,10 @@ export default function ProfileScreen() {
   const [modalType, setModalType] = useState("");
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [metricUnits, setMetricUnits] = useState(true);
-  const [darkMode, setDarkMode] = useState(true); // Set to true for default dark mode
+  const [darkMode, setDarkMode] = useState(false); 
 
-  const [person, setPerson] = useState({
-    name: "User",
-    email: "user@example.com",
-    age: "32",
-    height: "170",
-    weight: "75",
-  });
-
+  const [person, setPerson] = useState({name: "User",email: "user@example.com",
+    age: "32",height: "170",weight: "75"});
   useFocusEffect(
     React.useCallback(() => {
       const loadUser = async () => {
@@ -84,7 +49,6 @@ export default function ProfileScreen() {
     overallProgressPercent: 78,
   });
 
-  // Determine current theme colors
   const currentColors = {
     background: darkMode ? COLORS.darkBackground : COLORS.lightBackground,
     card: darkMode ? COLORS.darkCard : COLORS.lightCard,
@@ -119,7 +83,7 @@ export default function ProfileScreen() {
 
   const confirmLogout = () => {
     closeModal();
-    navigation.navigate("Landing"); // Assuming 'Landing' is your login/intro screen
+    navigation.navigate("Landing"); 
   };
 
   const confirmDelete = () => {
@@ -130,7 +94,6 @@ export default function ProfileScreen() {
     );
   };
 
-  // Helper function for rendering section cards
   const SectionCard = ({ title, items }) => (
     <View style={[styles.cardWrapper, { backgroundColor: currentColors.card }]}>
       <Text style={[styles.sectionTitle, { color: currentColors.subText }]}>
@@ -160,7 +123,6 @@ export default function ProfileScreen() {
 
   const renderPopupContent = () => {
     switch (modalType) {
-      // PERSONAL INFO --------------------------
       case "personal":
         return (
           <>
@@ -297,7 +259,6 @@ export default function ProfileScreen() {
           </>
         );
 
-      // NOTIFICATIONS ------------------------------------
       case "notifications":
         return (
           <>
@@ -308,13 +269,12 @@ export default function ProfileScreen() {
                 value={notificationsEnabled}
                 onValueChange={setNotificationsEnabled}
                 trackColor={{ false: currentColors.subText, true: COLORS.primary }}
-                thumbColor={COLORS.lightBackground} // Thumb is always bright for contrast
+                thumbColor={COLORS.lightBackground} 
               />
             </View>
           </>
         );
 
-      // UNIT SETTINGS ------------------------------------
       case "units":
         return (
           <>
@@ -331,7 +291,6 @@ export default function ProfileScreen() {
           </>
         );
 
-      // APPEARANCE ---------------------------------------
       case "appearance":
         return (
           <>
@@ -348,7 +307,6 @@ export default function ProfileScreen() {
           </>
         );
 
-      // LOGOUT -------------------------------------------
       case "logout":
         return (
           <>
@@ -365,7 +323,6 @@ export default function ProfileScreen() {
           </>
         );
 
-      // DELETE ACCOUNT ------------------------------------
       case "delete":
         return (
           <>
@@ -493,7 +450,7 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 }, // Background color applied dynamically
+  safe: { flex: 1 }, 
   container: { padding: 20, paddingBottom: 60 },
 
   headerRow: { alignItems: "center", marginBottom: 16 },
@@ -516,7 +473,7 @@ const styles = StyleSheet.create({
   },
 
   name: { fontSize: 18, fontWeight: "700", marginTop: 8 },
-  sub: { marginTop: 4 }, // Color applied dynamically
+  sub: { marginTop: 4 }, 
 
   cardWrapper: {
     padding: 14,
