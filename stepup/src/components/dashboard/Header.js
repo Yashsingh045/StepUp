@@ -28,7 +28,7 @@ const Header = () => {
             <View style={styles.avatarContainer}>
                 {/* Placeholder for Avatar */}
                 <Image
-                    source={{ uri: 'https://i.pravatar.cc/150?img=12' }}
+                    source={require('../../../assets/avatar.png')}
                     style={styles.avatar}
                 />
             </View>
