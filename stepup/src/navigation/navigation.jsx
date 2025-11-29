@@ -8,6 +8,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Landing from "../screens/Landing";
 // Screens
 import Login from "../screens/login";
+import Register from "../screens/register";
 import Dashboard from "../screens/dashboard";
 import Workouts from "../screens/workouts";
 import Profile from "../screens/profile";
@@ -122,6 +123,7 @@ export default function AppNavigation() {
       >
         <Stack.Screen name="Landing" component={Landing} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Home" component={BottomTabs} />
         <Stack.Screen name="AddWorkout" component={AddWorkout} options={{ presentation: 'modal' }} />
       </Stack.Navigator>
