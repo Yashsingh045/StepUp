@@ -1,4 +1,4 @@
-// HistoryScreen.js
+
 import React, { useEffect, useState, useMemo } from 'react';
 import {
   View,
@@ -35,7 +35,7 @@ const formatDisplayDate = (iso) => {
   return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 };
 
-export default function HistoryScreen() {
+export default function Workouts() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
 
@@ -63,6 +63,8 @@ export default function HistoryScreen() {
   };
 
   const saveWorkoutsToStorage = async (newList) => {
+    console.log("Workout Saved:", workoutData);
+
     try {
       const json = await AsyncStorage.getItem('stepup_data');
       const data = json ? JSON.parse(json) : { workouts: [], weeklyGoals: [], customTypes: [] };

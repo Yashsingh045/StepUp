@@ -72,22 +72,23 @@ function BottomTabs({ navigation }) {
       />
 
       {/* Middle + Button */}
-      <Tab.Screen
-        name="Add"
-        component={() => null}
-        options={{
-          tabBarLabel: "",
-          tabBarIcon: () => null,
-          tabBarButton: (props) => (
-            <AddButton
-              {...props}
-              onPress={() => navigation.navigate("AddWorkout")}
-            >
-              <Ionicons name="add" size={36} color="#fff" />
-            </AddButton>
-          ),
-        }}
-      />
+<Tab.Screen
+  name="Add"
+  component={View}   // ⭐ FIXED (was: component={() => null})
+  options={{
+    tabBarLabel: "",
+    tabBarIcon: () => null,
+    tabBarButton: (props) => (
+      <AddButton
+        {...props}
+        onPress={() => navigation.navigate("AddWorkout")}
+      >
+        <Ionicons name="add" size={36} color="#fff" />
+      </AddButton>
+    ),
+  }}
+/>
+
 
       {/* Progress */}
       <Tab.Screen
