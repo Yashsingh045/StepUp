@@ -11,6 +11,8 @@ import {
   Modal,
   Platform,
 } from 'react-native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS, FONTS, SIZES } from '../constants/theme';
@@ -125,36 +127,54 @@ export default function AddWorkout() {
   };
 
   const handleSave = async () => {
-    if (!isRestDay && !duration) {
-      Alert.alert('Missing Field', 'Please enter a duration for your workout.');
-      return;
+  if (!isRestDay && !duration) {
+    Alert.alert('Missing Field', 'Please enter a duration for your workout.');
+    return;
+  }
+
+  try {
+    const workoutData = {
+      id: editingWorkout ? editingWorkout.id : `uuid-${Date.now()}`,
+      date: date.toISOString().split('T')[0],
+      type: isRestDay ? 'Rest' : workoutType,
+      duration: isRestDay ? 0 : parseInt(duration),
+      calories: isRestDay ? 0 : parseInt(calories) || 0,
+      intensity: isRestDay ? 'Rest' : intensity,
+      notes,
+      isRestDay
+    };
+
+    if (editingWorkout) {
+      // EDIT MODE
+      const json = await AsyncStorage.getItem("stepup_data");
+      const data = json ? JSON.parse(json) : { workouts: [] };
+
+      const updated = data.workouts.map(w =>
+        w.id === workoutData.id ? workoutData : w
+      );
+
+      data.workouts = updated;
+      await AsyncStorage.setItem("stepup_data", JSON.stringify(data));
+
+    } else {
+      // ADD NEW WORKOUT
+      const json = await AsyncStorage.getItem("stepup_data");
+      const data = json ? JSON.parse(json) : { workouts: [] };
+
+      data.workouts.push(workoutData);
+
+      await AsyncStorage.setItem("stepup_data", JSON.stringify(data));
     }
 
-    try {
-      const workoutData = {
-        id: editingWorkout ? editingWorkout.id : `uuid-${Date.now()}`,
-        date: date.toISOString().split('T')[0], // Store as YYYY-MM-DD
-        type: isRestDay ? 'Rest' : workoutType,
-        duration: isRestDay ? 0 : parseInt(duration),
-        calories: isRestDay ? 0 : parseInt(calories) || 0,
-        intensity: isRestDay ? 'Rest' : intensity,
-        notes: notes,
-        isRestDay: isRestDay,
-      };
+    Alert.alert('Success', 'Workout saved successfully!');
+    navigation.goBack();
 
-      if (editingWorkout) {
-        await updateWorkout(workoutData);
-      } else {
-        await saveWorkout(workoutData);
-      }
+  } catch (error) {
+    console.error('Error saving workout:', error);
+    Alert.alert('Error', 'Failed to save workout');
+  }
+};
 
-      Alert.alert('Success', 'Workout saved successfully!');
-      navigation.goBack();
-    } catch (error) {
-      console.error('Error saving workout:', error);
-      Alert.alert('Error', 'Failed to save workout');
-    }
-  };
 
   const allTypes = [...defaultTypes, ...customTypes];
 
