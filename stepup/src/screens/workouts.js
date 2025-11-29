@@ -39,7 +39,7 @@ export default function Workouts() {
   const isFocused = useIsFocused();
 
   const [workouts, setWorkouts] = useState([]);
-  const [view, setView] = useState('History'); // 'History' or 'Calendar'
+  const [view, setView] = useState('Workout'); // changed initial value to 'Workout' (was 'History')
   const [dateRange, setDateRange] = useState('This Month'); // 'This Month' | 'This Week' | 'All Time'
   const [typeFilter, setTypeFilter] = useState('All Workouts');
   const [sortBy, setSortBy] = useState('Date (Newest)'); // Date (Newest), Date (Oldest), Duration, Calories
@@ -200,7 +200,7 @@ export default function Workouts() {
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconBtn}>
         <Ionicons name="arrow-back" size={22} color={TEXT_WHITE} />
       </TouchableOpacity>
-      <Text style={[FONTS.h2, { color: TEXT_WHITE }]}>Workout History</Text>
+      <Text style={[FONTS.h2, { color: TEXT_WHITE }]}>Workout Logs</Text>
       <TouchableOpacity
         onPress={() => navigation.navigate('AddWorkout')}
         style={styles.iconBtn}
@@ -213,10 +213,10 @@ export default function Workouts() {
   const TabSwitch = () => (
     <View style={styles.tabRow}>
       <TouchableOpacity
-        style={[styles.tabBtn, view === 'History' && styles.tabActive]}
-        onPress={() => setView('History')}
+        style={[styles.tabBtn, view === 'Workout' && styles.tabActive]}
+        onPress={() => setView('Workout')}
       >
-        <Text style={[styles.tabText, view === 'History' && styles.tabTextActive]}>History</Text>
+        <Text style={[styles.tabText, view === 'Workout' && styles.tabTextActive]}>Workout</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.tabBtn, view === 'Calendar' && styles.tabActive]}
@@ -312,20 +312,22 @@ export default function Workouts() {
   };
 
   // Split into recent (last 7 days) and past
-const now = new Date();
-const sevenDaysAgo = new Date(now);
-sevenDaysAgo.setDate(now.getDate() - 7);
+  const now = new Date();
+  const sevenDaysAgo = new Date(now);
+  sevenDaysAgo.setDate(now.getDate() - 7);
 
-const recentWorkouts = finalDisplayed.filter(w => {
-  const d = isoToDate(w.date);
-  return d >= sevenDaysAgo;
-});
+  const recentWorkouts = finalDisplayed.filter(w => {
+    if (!w.date) return false;
+    const d = isoToDate(w.date);
+    // include items that are >= sevenDaysAgo (i.e., last 7 days including today)
+    return d >= sevenDaysAgo;
+  });
 
-const olderWorkouts = finalDisplayed.filter(w => {
-  const d = isoToDate(w.date);
-  return d < sevenDaysAgo;
-});
-
+  const olderWorkouts = finalDisplayed.filter(w => {
+    if (!w.date) return false;
+    const d = isoToDate(w.date);
+    return d < sevenDaysAgo;
+  });
 
   return (
     <View style={styles.container}>
@@ -362,15 +364,25 @@ const olderWorkouts = finalDisplayed.filter(w => {
           />
         </View>
       ) : (
-        <>
+        <View style={{ paddingHorizontal: 15, paddingBottom: 120 }}>
+          <Text style={[styles.sectionTitle, { marginTop: 6 }]}>Recent Workouts</Text>
           <FlatList
-            data={finalDisplayed}
+            data={recentWorkouts}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
-            contentContainerStyle={{ padding: 15, paddingBottom: 120 }}
-            ListEmptyComponent={<Text style={styles.emptyText}>No workouts yet. Log one now!</Text>}
+            ListEmptyComponent={<Text style={styles.emptyText}>No recent workouts in the last 7 days.</Text>}
+            contentContainerStyle={{ paddingTop: 10 }}
           />
-        </>
+
+          <Text style={[styles.sectionTitle, { marginTop: 18 }]}>Past Workouts</Text>
+          <FlatList
+            data={olderWorkouts}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            ListEmptyComponent={<Text style={styles.emptyText}>No past workouts.</Text>}
+            contentContainerStyle={{ paddingTop: 10 }}
+          />
+        </View>
       )}
 
       {/* Filter Modal (type select) */}
