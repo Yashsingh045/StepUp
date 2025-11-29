@@ -15,7 +15,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { FONTS, SIZES } from '../constants/theme';
+import { COLORS, FONTS, SIZES } from '../constants/theme';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   saveWorkout,
@@ -24,21 +24,6 @@ import {
   getCustomTypes,
   addCustomType
 } from '../utils/storage';
-
-const C = {
-  BG_PRIMARY: "#121212",
-  CARD_BG: "#1E1E1E",
-  TEXT_LIGHT: "#FFFFFFE6",
-  TEXT_MUTED: "#AAAAAA",
-  BORDER: "#333333",
-  PROGRESS_BG: "#444444",
-  PRIMARY_ACCENT: "#6C63FF",
-  ORANGE_ACCENT: "#FF8C00",
-  SUCCESS_ACCENT: "#00C853",
-  REST_DAY_ACCENT: "#F08080",
-  WHITE: "#FFFFFF",
-  BLACK: "#000000",
-};
 
 export default function AddWorkout() {
   const navigation = useNavigation();
@@ -82,7 +67,7 @@ export default function AddWorkout() {
       const types = await getCustomTypes();
       const uniqueCustom = types.filter(t => !defaultTypes.includes(t));
       setCustomTypes(uniqueCustom);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleDateChange = (event, selectedDate) => {
@@ -174,23 +159,23 @@ export default function AddWorkout() {
   const allTypes = [...defaultTypes, ...customTypes];
 
   return (
-    <View style={[styles.container, { backgroundColor: C.BG_PRIMARY }]}>
+    <View style={styles.container}>
 
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={[styles.iconButton, { backgroundColor: C.CARD_BG }]}
+          style={styles.iconButton}
         >
-          <Ionicons name="close" size={24} color={C.TEXT_LIGHT} />
+          <Ionicons name="close" size={24} color={COLORS.text} />
         </TouchableOpacity>
 
-        <Text style={[FONTS.h2, { color: C.TEXT_LIGHT }]}>
+        <Text style={styles.headerTitle}>
           {editingWorkout ? 'Edit Workout' : 'Log Workout'}
         </Text>
 
         {editingWorkout ? (
           <TouchableOpacity
-            style={[styles.iconButton, { backgroundColor: C.CARD_BG }]}
+            style={styles.iconButton}
             onPress={handleDelete}
           >
             <Ionicons name="trash-outline" size={24} color="red" />
@@ -205,12 +190,12 @@ export default function AddWorkout() {
         contentContainerStyle={{ paddingBottom: 100 }}
       >
         <TouchableOpacity
-          style={[styles.dateCard, { backgroundColor: C.CARD_BG }]}
+          style={styles.dateCard}
           onPress={() => setShowDatePicker(true)}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Ionicons name="calendar-outline" size={24} color={C.TEXT_LIGHT} />
-            <Text style={[styles.dateText, { color: C.TEXT_LIGHT, marginLeft: 10 }]}>
+            <Ionicons name="calendar-outline" size={24} color={COLORS.text} />
+            <Text style={styles.dateText}>
               {date.toLocaleDateString(undefined, {
                 weekday: 'long',
                 year: 'numeric',
@@ -219,7 +204,7 @@ export default function AddWorkout() {
               })}
             </Text>
           </View>
-          <Ionicons name="chevron-down" size={20} color={C.TEXT_MUTED} />
+          <Ionicons name="chevron-down" size={20} color={COLORS.subtext} />
         </TouchableOpacity>
 
         {showDatePicker && (
@@ -229,40 +214,41 @@ export default function AddWorkout() {
             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             onChange={handleDateChange}
             maximumDate={new Date()}
-            themeVariant={"dark"}
+            themeVariant="dark"
           />
         )}
 
-        <View style={[styles.card, { backgroundColor: C.CARD_BG }]}>
+        {/* Rest Day */}
+        <View style={styles.card}>
           <View style={styles.rowCenter}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <MaterialCommunityIcons
                 name="bed-outline"
                 size={24}
-                color={C.TEXT_LIGHT}
+                color={COLORS.text}
                 style={{ marginRight: 10 }}
               />
-              <Text style={[styles.label, { color: C.TEXT_LIGHT }]}>
+              <Text style={styles.label}>
                 Rest Day
               </Text>
             </View>
 
             <Switch
-              trackColor={{ false: C.BORDER, true: C.PRIMARY_ACCENT }}
+              trackColor={{ false: COLORS.border, true: COLORS.primary }}
               thumbColor={isRestDay ? "#fff" : "#f4f4f4"}
               value={isRestDay}
               onValueChange={setIsRestDay}
             />
           </View>
 
-          <Text style={[styles.subtext, { color: C.TEXT_MUTED }]}>
+          <Text style={styles.subtext}>
             Mark this day as a rest day to keep your streak.
           </Text>
         </View>
 
         {!isRestDay && (
           <>
-            <Text style={[styles.sectionTitle, { color: C.TEXT_LIGHT }]}>
+            <Text style={styles.sectionTitle}>
               Workout Type
             </Text>
 
@@ -272,22 +258,14 @@ export default function AddWorkout() {
                   key={type}
                   style={[
                     styles.typeButton,
-                    {
-                      backgroundColor:
-                        workoutType === type ? C.PRIMARY_ACCENT : C.CARD_BG,
-                      borderColor:
-                        workoutType === type ? C.PRIMARY_ACCENT : C.BORDER
-                    }
+                    workoutType === type && styles.typeButtonActive
                   ]}
                   onPress={() => setWorkoutType(type)}
                 >
                   <Text
                     style={[
                       styles.typeText,
-                      {
-                        color:
-                          workoutType === type ? C.WHITE : C.TEXT_LIGHT
-                      }
+                      workoutType === type && styles.typeTextActive
                     ]}
                   >
                     {type}
@@ -296,75 +274,60 @@ export default function AddWorkout() {
               ))}
 
               <TouchableOpacity
-                style={[
-                  styles.typeButton,
-                  {
-                    backgroundColor: C.CARD_BG,
-                    borderColor: C.BORDER,
-                    flexDirection: "row",
-                    alignItems: "center"
-                  }
-                ]}
+                style={[styles.typeButton, styles.customTypeButton]}
                 onPress={() => setIsModalVisible(true)}
               >
-                <Ionicons name="add" size={20} color={C.TEXT_LIGHT} />
-                <Text style={[styles.typeText, { marginLeft: 5, color: C.TEXT_LIGHT }]}>
+                <Ionicons name="add" size={20} color={COLORS.text} />
+                <Text style={[styles.typeText, styles.customTypeText]}>
                   Custom
                 </Text>
               </TouchableOpacity>
             </View>
 
             <View style={styles.rowContainer}>
-              <View
-                style={[
-                  styles.inputCard,
-                  { backgroundColor: C.CARD_BG, flex: 1, marginRight: 10 }
-                ]}
-              >
-                <Text style={[styles.inputLabel, { color: C.TEXT_MUTED }]}>
+              {/* Duration */}
+              <View style={[styles.inputCard, styles.inputCardLeft]}>
+                <Text style={styles.inputLabel}>
                   Duration
                 </Text>
                 <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
                   <TextInput
-                    style={[styles.durationInput, { color: C.TEXT_LIGHT }]}
+                    style={styles.durationInput}
                     value={duration}
                     onChangeText={setDuration}
                     keyboardType="numeric"
                     placeholder="0"
-                    placeholderTextColor={C.TEXT_MUTED}
+                    placeholderTextColor={COLORS.placeholder}
                   />
-                  <Text style={[styles.unitText, { color: C.TEXT_MUTED }]}>
+                  <Text style={styles.unitText}>
                     min
                   </Text>
                 </View>
               </View>
 
-              <View
-                style={[
-                  styles.inputCard,
-                  { backgroundColor: C.CARD_BG, flex: 1, marginLeft: 10 }
-                ]}
-              >
-                <Text style={[styles.inputLabel, { color: C.TEXT_MUTED }]}>
+              {/* Calories */}
+              <View style={[styles.inputCard, styles.inputCardRight]}>
+                <Text style={styles.inputLabel}>
                   Calories
                 </Text>
                 <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
                   <TextInput
-                    style={[styles.durationInput, { color: C.TEXT_LIGHT }]}
+                    style={styles.durationInput}
                     value={calories}
                     onChangeText={setCalories}
                     keyboardType="numeric"
                     placeholder="0"
-                    placeholderTextColor={C.TEXT_MUTED}
+                    placeholderTextColor={COLORS.placeholder}
                   />
-                  <Text style={[styles.unitText, { color: C.TEXT_MUTED }]}>
+                  <Text style={styles.unitText}>
                     kcal
                   </Text>
                 </View>
               </View>
             </View>
 
-            <Text style={[styles.sectionTitle, { color: C.TEXT_LIGHT }]}>
+            {/* Intensity */}
+            <Text style={styles.sectionTitle}>
               Intensity
             </Text>
             <View style={styles.typeContainer}>
@@ -373,23 +336,15 @@ export default function AddWorkout() {
                   key={level}
                   style={[
                     styles.typeButton,
-                    {
-                      backgroundColor:
-                        intensity === level ? C.PRIMARY_ACCENT : C.CARD_BG,
-                      borderColor:
-                        intensity === level ? C.PRIMARY_ACCENT : C.BORDER,
-                      paddingHorizontal: 20
-                    }
+                    styles.intensityButton,
+                    intensity === level && styles.typeButtonActive
                   ]}
                   onPress={() => setIntensity(level)}
                 >
                   <Text
                     style={[
                       styles.typeText,
-                      {
-                        color:
-                          intensity === level ? C.WHITE : C.TEXT_LIGHT
-                      }
+                      intensity === level && styles.typeTextActive
                     ]}
                   >
                     {level}
@@ -400,23 +355,21 @@ export default function AddWorkout() {
           </>
         )}
 
-        <Text style={[styles.sectionTitle, { color: C.TEXT_LIGHT }]}>
+        {/* Notes */}
+        <Text style={styles.sectionTitle}>
           Notes
         </Text>
         <TextInput
-          style={[
-            styles.notesInput,
-            { backgroundColor: C.CARD_BG, color: C.TEXT_LIGHT }
-          ]}
+          style={styles.notesInput}
           value={notes}
           onChangeText={setNotes}
           placeholder="How did it feel?..."
-          placeholderTextColor={C.TEXT_MUTED}
+          placeholderTextColor={COLORS.placeholder}
           multiline
         />
 
         <TouchableOpacity
-          style={[styles.saveButton, { backgroundColor: C.PRIMARY_ACCENT }]}
+          style={styles.saveButton}
           onPress={handleSave}
         >
           <Ionicons name="checkmark-circle-outline" size={24} color={C.WHITE} />
@@ -431,44 +384,35 @@ export default function AddWorkout() {
         onRequestClose={() => setIsModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: C.CARD_BG }]}>
-            <Text style={[styles.modalTitle, { color: C.TEXT_LIGHT }]}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>
               New Workout Type
             </Text>
 
             <TextInput
-              style={[
-                styles.modalInput,
-                { backgroundColor: C.BG_PRIMARY, color: C.TEXT_LIGHT }
-              ]}
+              style={styles.modalInput}
               value={newTypeName}
               onChangeText={setNewTypeName}
               placeholder="e.g. Pilates"
-              placeholderTextColor={C.TEXT_MUTED}
+              placeholderTextColor={COLORS.placeholder}
               autoFocus
             />
 
             <View style={styles.modalButtons}>
               <TouchableOpacity
-                style={[
-                  styles.modalButton,
-                  { backgroundColor: C.CARD_BG, borderWidth: 1, borderColor: C.BORDER, marginRight: 10 }
-                ]}
+                style={[styles.modalButton, styles.modalButtonCancel]}
                 onPress={() => setIsModalVisible(false)}
               >
-                <Text style={[styles.modalButtonText, { color: C.TEXT_LIGHT }]}>
+                <Text style={styles.modalButtonText}>
                   Cancel
                 </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[
-                  styles.modalButton,
-                  { backgroundColor: C.PRIMARY_ACCENT, marginLeft: 10 }
-                ]}
+                style={[styles.modalButton, styles.modalButtonAdd]}
                 onPress={handleAddCustomType}
               >
-                <Text style={[styles.modalButtonText, { color: C.WHITE }]}>
+                <Text style={styles.modalButtonTextAdd}>
                   Add
                 </Text>
               </TouchableOpacity>
@@ -484,7 +428,8 @@ export default function AddWorkout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20
+    paddingTop: 20,
+    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
@@ -493,9 +438,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: SIZES.padding,
     marginBottom: 20,
   },
+  headerTitle: {
+    ...FONTS.h2,
+    color: COLORS.text,
+  },
   iconButton: {
     padding: 8,
-    borderRadius: 20
+    borderRadius: 20,
+    backgroundColor: COLORS.card,
   },
   scrollView: {
     paddingHorizontal: SIZES.padding
@@ -505,12 +455,14 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginTop: 10,
     fontWeight: 'bold',
-    fontSize: 18
+    fontSize: 18,
+    color: COLORS.text,
   },
   card: {
     borderRadius: 15,
     padding: 15,
-    marginBottom: 20
+    marginBottom: 20,
+    backgroundColor: COLORS.card,
   },
   dateCard: {
     borderRadius: 15,
@@ -518,11 +470,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: COLORS.card,
   },
   dateText: {
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '600',
+    color: COLORS.text,
+    marginLeft: 10,
   },
   rowCenter: {
     flexDirection: 'row',
@@ -532,10 +487,12 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '600',
+    color: COLORS.text,
   },
   subtext: {
-    fontSize: 12
+    fontSize: 12,
+    color: COLORS.subtext,
   },
   typeContainer: {
     flexDirection: 'row',
@@ -548,11 +505,31 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 10,
     marginBottom: 10,
-    borderWidth: 1
+    borderWidth: 1,
+    backgroundColor: COLORS.card,
+    borderColor: COLORS.border,
+  },
+  typeButtonActive: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
   },
   typeText: {
     fontWeight: '600',
-    fontSize: 14
+    fontSize: 14,
+    color: COLORS.text,
+  },
+  typeTextActive: {
+    color: '#fff',
+  },
+  customTypeButton: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  customTypeText: {
+    marginLeft: 5,
+  },
+  intensityButton: {
+    paddingHorizontal: 20,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -561,21 +538,33 @@ const styles = StyleSheet.create({
   inputCard: {
     borderRadius: 15,
     padding: 15,
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: COLORS.card,
+  },
+  inputCardLeft: {
+    flex: 1,
+    marginRight: 10,
+  },
+  inputCardRight: {
+    flex: 1,
+    marginLeft: 10,
   },
   inputLabel: {
     fontSize: 14,
-    marginBottom: 5
+    marginBottom: 5,
+    color: COLORS.subtext,
   },
   durationInput: {
     fontSize: 32,
     fontWeight: 'bold',
     minWidth: 40,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: COLORS.text,
   },
   unitText: {
     fontSize: 14,
-    marginLeft: 5
+    marginLeft: 5,
+    color: COLORS.subtext,
   },
   notesInput: {
     borderRadius: 15,
@@ -583,7 +572,9 @@ const styles = StyleSheet.create({
     height: 100,
     textAlignVertical: 'top',
     marginBottom: 20,
-    fontSize: 16
+    fontSize: 16,
+    backgroundColor: COLORS.card,
+    color: COLORS.text,
   },
   saveButton: {
     padding: 15,
@@ -591,7 +582,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20
+    marginBottom: 20,
+    backgroundColor: COLORS.primary,
   },
   saveButtonText: {
     color: "#fff",
@@ -608,19 +600,23 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '80%',
     borderRadius: 20,
-    padding: 20
+    padding: 20,
+    backgroundColor: COLORS.card,
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 15,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: COLORS.text,
   },
   modalInput: {
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
-    fontSize: 16
+    fontSize: 16,
+    backgroundColor: COLORS.background,
+    color: COLORS.text,
   },
   modalButtons: {
     flexDirection: 'row'
@@ -631,7 +627,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center'
   },
+  modalButtonCancel: {
+    backgroundColor: COLORS.card,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginRight: 10,
+  },
+  modalButtonAdd: {
+    backgroundColor: COLORS.primary,
+    marginLeft: 10,
+  },
   modalButtonText: {
-    fontWeight: '600'
-  }
+    fontWeight: '600',
+    color: COLORS.text,
+  },
+  modalButtonTextAdd: {
+    fontWeight: '600',
+    color: "#fff",
+  },
 });

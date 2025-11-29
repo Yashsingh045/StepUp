@@ -1,19 +1,17 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet, StatusBar } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
+import { COLORS } from '../constants/theme';
 import Header from '../components/dashboard/Header';
 import TodayCard from '../components/dashboard/TodayCard';
 import WeeklyGoals from '../components/dashboard/WeeklyGoals';
 import RecentWorkouts from '../components/dashboard/RecentWorkouts';
 
 const Dashboard = () => {
-  const { currentColors, isDarkMode } = useTheme();
-
   return (
-    <View style={[styles.container, { backgroundColor: currentColors.background }]}>
+    <View style={styles.container}>
       <StatusBar
-        barStyle={isDarkMode ? "light-content" : "dark-content"}
-        backgroundColor={currentColors.background}
+        barStyle="light-content"
+        backgroundColor={COLORS.background}
       />
 
       <ScrollView
@@ -32,6 +30,7 @@ const Dashboard = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.background,
   },
   scrollContent: {
     paddingBottom: 100,

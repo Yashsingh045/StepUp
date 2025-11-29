@@ -10,6 +10,7 @@ import {
     Animated,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { COLORS } from '../constants/theme';
 
 const { width, height } = Dimensions.get('window');
 
@@ -35,9 +36,6 @@ const images = [
 ];
 
 export default function Landing({ navigation }) {
-
-    const isDarkMode = true;
-
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const fadeAnim = useState(new Animated.Value(1))[0];
 
@@ -80,8 +78,8 @@ export default function Landing({ navigation }) {
     }, [fadeAnim]);
 
     return (
-        <View style={[styles.container, { backgroundColor: C.BG_PRIMARY }]}>
-            <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
+        <View style={styles.container}>
+            <StatusBar barStyle="light-content" />
 
             <Animated.View style={[styles.backgroundContainer, { opacity: fadeAnim }]}>
                 <ImageBackground
@@ -96,19 +94,21 @@ export default function Landing({ navigation }) {
                     'transparent',
                     'rgba(0,20,10,0.85)',
                     'rgba(0,0,0,0.8)',
+                    'rgba(0,20,10,0.85)',
+                    'rgba(0,0,0,0.8)',
                 ]}
                 style={styles.gradient}
             >
                 <View style={styles.content}>
 
                     <View style={styles.brandingContainer}>
-                        <Text style={[styles.logo, { color: C.TEXT_LIGHT }]}>stepUp</Text>
+                        <Text style={styles.logo}>stepUp</Text>
 
-                        <Text style={[styles.tagline, { color: C.TEXT_MUTED }]}>
+                        <Text style={styles.tagline}>
                             Take Control of Your Fitness
                         </Text>
 
-                        <Text style={[styles.description, { color: C.TEXT_MUTED }]}>
+                        <Text style={styles.description}>
                             The ultimate tool for manually logging every lift,{'\n'}
                             run, and workout. Track your progress, your way.
                         </Text>
@@ -122,45 +122,39 @@ export default function Landing({ navigation }) {
                                     style={[
                                         styles.dot,
                                         index === currentImageIndex
-                                            ? { backgroundColor: C.TEXT_LIGHT, width: 24 }
-                                            : { backgroundColor: C.TEXT_MUTED }
+                                            ? styles.activeDot
+                                            : styles.inactiveDot
                                     ]}
                                 />
                             ))}
                         </View>
 
                         <TouchableOpacity
-                            style={[
-                                styles.primaryButton,
-                                { backgroundColor: C.PRIMARY_ACCENT }
-                            ]}
+                            style={styles.primaryButton}
                             onPress={() => navigation.navigate('Register')}
                             activeOpacity={0.8}
                         >
-                            <Text style={[styles.primaryButtonText, { color: C.WHITE }]}>
+                            <Text style={styles.primaryButtonText}>
                                 Create Account
                             </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            style={[
-                                styles.secondaryButton,
-                                { borderColor: C.PRIMARY_ACCENT }
-                            ]}
+                            style={styles.secondaryButton}
                             onPress={() => navigation.navigate('Login')}
                             activeOpacity={0.8}
                         >
-                            <Text style={[styles.secondaryButtonText, { color: C.PRIMARY_ACCENT }]}>
+                            <Text style={styles.secondaryButtonText}>
                                 Log In
                             </Text>
                         </TouchableOpacity>
 
-                        <Text style={[styles.termsText, { color: C.TEXT_MUTED }]}>
+                        <Text style={styles.termsText}>
                             By continuing, you agree to our{' '}
-                            <Text style={[styles.termsLink, { color: C.TEXT_LIGHT }]}>
+                            <Text style={styles.termsLink}>
                                 Terms of Service
                             </Text> and{'\n'}
-                            <Text style={[styles.termsLink, { color: C.TEXT_LIGHT }]}>
+                            <Text style={styles.termsLink}>
                                 Privacy Policy
                             </Text>.
                         </Text>
@@ -175,6 +169,7 @@ export default function Landing({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: COLORS.background,
     },
     backgroundContainer: {
         position: 'absolute',
@@ -208,12 +203,14 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         marginBottom: 16,
         letterSpacing: -1,
+        color: COLORS.text,
     },
     tagline: {
         fontSize: 22,
         fontWeight: '600',
         marginBottom: 16,
         textAlign: 'center',
+        color: COLORS.secondaryText,
     },
     description: {
         fontSize: 15,
@@ -221,6 +218,7 @@ const styles = StyleSheet.create({
         lineHeight: 22,
         paddingHorizontal: 16,
         marginBottom: -186,
+        color: COLORS.secondaryText,
     },
     bottomSection: {
         width: '100%',
@@ -239,7 +237,15 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginHorizontal: 4,
     },
+    activeDot: {
+        backgroundColor: COLORS.text,
+        width: 24,
+    },
+    inactiveDot: {
+        backgroundColor: COLORS.secondaryText,
+    },
     primaryButton: {
+        backgroundColor: COLORS.accent,
         paddingVertical: 12,
         borderRadius: 12,
         alignItems: 'center',
@@ -253,6 +259,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: '700',
         letterSpacing: 0.5,
+        color: COLORS.buttonText,
     },
     secondaryButton: {
         backgroundColor: 'transparent',
@@ -260,6 +267,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         alignItems: 'center',
         borderWidth: 2,
+        borderColor: COLORS.accent,
         marginBottom: 16,
         width: '100%',
         maxWidth: 280,
@@ -269,14 +277,17 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
         letterSpacing: 0.5,
+        color: COLORS.accent,
     },
     termsText: {
         fontSize: 12,
         textAlign: 'center',
         lineHeight: 18,
         marginBottom: 40,
+        color: COLORS.secondaryText,
     },
     termsLink: {
         textDecorationLine: 'underline',
+        color: COLORS.text,
     },
 });

@@ -106,7 +106,7 @@ const Progress = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={24} color={C.TEXT_LIGHT} />
+          <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Progress Summary</Text>
         <View style={{ width: 24 }} />
@@ -192,13 +192,13 @@ const Progress = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: C.BG_PRIMARY,
+    backgroundColor: "#121212",
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: C.BG_PRIMARY,
+    backgroundColor: "#121212",
   },
   header: {
     flexDirection: 'row',
@@ -207,24 +207,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: C.BG_PRIMARY
+    backgroundColor: "#1E1E1E"
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: C.TEXT_LIGHT,
+    color: '#E0E0E0',
   },
   scrollContent: {
     paddingHorizontal: 20,
     paddingBottom: 40,
+    paddingTop: 20,
   },
   card: {
-    backgroundColor: C.CARD_BG,
-    borderRadius: 16,
-    padding: 20,
+    backgroundColor: '#1E1E1E',
+    borderRadius: 12,
+    padding: 16,
     marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
     borderWidth: 1,
-    borderColor: C.BORDER,
+    borderColor: '#333333',
   },
   cardHeader: {
     flexDirection: 'row',
@@ -233,37 +239,37 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   cardLabel: {
-    color: C.TEXT_MUTED,
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: 16,
+    color: '#A0A0A0',
+    marginLeft: 8,
   },
   largeValue: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: C.TEXT_LIGHT,
+    marginTop: 8,
+    color: '#FFFFFF',
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: C.TEXT_LIGHT,
-    marginTop: 16,
-    marginBottom: 12,
+    fontWeight: '600',
+    marginVertical: 16,
+    color: '#E0E0E0',
   },
   subLabel: {
-    color: C.TEXT_MUTED,
     fontSize: 14,
+    color: '#A0A0A0',
     marginBottom: 4,
   },
   mediumValue: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: C.TEXT_LIGHT,
+    color: '#FFFFFF',
     marginBottom: 4,
   },
   comparisonText: {
-    color: C.TEXT_MUTED,
     fontSize: 14,
-    marginBottom: 24,
+    color: '#A0A0A0',
+    marginBottom: 12,
   },
   breakdownContainer: {
     gap: 16,
@@ -274,16 +280,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   breakdownLabel: {
-    color: C.TEXT_MUTED,
     fontSize: 14,
-    width: 70,
+    color: '#E0E0E0',
+    width: 80,
   },
   progressBarContainer: {
     flex: 1,
     height: 8,
-    backgroundColor: C.PROGRESS_BG,
+    backgroundColor: '#333333',
     borderRadius: 4,
     marginLeft: 12,
+    overflow: 'hidden',
   },
   progressBar: {
     height: '100%',
@@ -300,9 +307,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   dayLabel: {
-    color: C.TEXT_MUTED,
     fontSize: 12,
-    fontWeight: '600',
+    color: '#A0A0A0',
+    marginBottom: 8,
+    textAlign: 'center',
   },
   dayIndicator: {
     width: 36,
@@ -310,7 +318,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: C.PROGRESS_BG,
+    backgroundColor: '#2D2D2D',
   },
   completedIndicator: {
     backgroundColor: C.SUCCESS_ACCENT,
@@ -319,16 +327,16 @@ const styles = StyleSheet.create({
     backgroundColor: C.REST_DAY_ACCENT,
   },
   todayIndicator: {
-    backgroundColor: C.CARD_BG,
-    borderWidth: 1,
-    borderColor: C.PRIMARY_ACCENT,
+    borderWidth: 2,
+    borderColor: COLORS.primaryBlue,
+    backgroundColor: '#0A1F33',
   },
   futureIndicator: {
     opacity: 0.3,
   },
   helperText: {
-    color: C.TEXT_MUTED,
     fontSize: 12,
+    color: '#A0A0A0',
     textAlign: 'center',
   },
 });
