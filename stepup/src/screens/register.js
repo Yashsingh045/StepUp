@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { registerUser } from '../utils/storage';
+import { useAuth } from '../context/AuthContext';
 
 export default function Register({ navigation }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { register } = useAuth();
 
     const handleRegister = async () => {
         if (!name || !email || !password) {
@@ -14,7 +15,7 @@ export default function Register({ navigation }) {
         }
 
         const user = { name, email, password };
-        const result = await registerUser(user);
+        const result = await register(user);
 
         if (result.success) {
             Alert.alert('Success', result.message, [

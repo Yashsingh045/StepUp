@@ -13,11 +13,12 @@ import {
   Keyboard
 } from "react-native";
 import { COLORS, FONTS, SIZES } from "../constants/theme";
-import { loginUser } from "../utils/storage";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuth();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -25,11 +26,12 @@ export default function Login({ navigation }) {
       return;
     }
 
-    const result = await loginUser(email, password);
+    const result = await login(email, password);
     if (result.success) {
       navigation.replace("Home");
     } else {
       Alert.alert("Error", result.message);
+      setPassword(""); // Clear password on failure
     }
   };
 
